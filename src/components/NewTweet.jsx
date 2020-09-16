@@ -5,9 +5,15 @@ import { addTweet as addTweetAction } from '../actions';
 import Avatar from './Avatar';
 import { isEmpty } from '../utils';
 
-// const MAX_CHARS = 60; // TODO: Implement max for input
+const MAX_CHARS = 60;
 
 export class NewTweet extends Component {
+
+  constructor(props) {
+    super(props);
+    this.publishTweet = this.publishTweet.bind(this);
+  }
+
   state = { text: '' }
 
   publishTweet() {
@@ -20,6 +26,7 @@ export class NewTweet extends Component {
       date: new Date(),
       retweets: 0,
     });
+    this.setState({text: ''});
   }
 
   render() {
@@ -31,9 +38,11 @@ export class NewTweet extends Component {
       <div className="new-tweet">
         <Avatar src={user.avatar} />
         <input
+          value={this.state.text}
           className="new-tweet-input"
           placeholder="What's happening?"
           data-testid="new-tweet-input"
+          maxLength={MAX_CHARS}
           onChange={({ target: { value } }) => this.setState({ text: value })}
         />
         <button
@@ -41,6 +50,7 @@ export class NewTweet extends Component {
           type="button"
           data-testid="new-tweet-button"
           onClick={this.publishTweet}
+          disabled={this.state.text.length == 0}
         >
           Tweet
         </button>
